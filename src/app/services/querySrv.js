@@ -229,6 +229,8 @@ function (angular, _, config, kbn) {
         return _.pluck(_.where(self.list,{pin:false,enable:true}),'id');
       case 'selected':
         return _.intersection(_.pluck(_.where(self.list,{enable:true}),'id'),config.ids);
+      case 'selected - allow disabled':
+        return _.intersection(_.pluck(self.list, 'id'), config.ids);
       default:
         return _.pluck(_.where(self.list,{enable:true}),'id');
       }
