@@ -1,8 +1,10 @@
 /** @scratch /panels/5
+ *
  * include::panels/histogram.asciidoc[]
  */
 
 /** @scratch /panels/histogram/0
+ *
  * == Histogram
  * Status: *Stable*
  *
@@ -64,6 +66,7 @@ function (angular, app, $, _, kbn, moment, timeSeries, numeral) {
     // Set and populate defaults
     var _d = {
       /** @scratch /panels/histogram/3
+       *
        * === Parameters
        * ==== Axis options
        * mode:: Value to use for the y-axis. For all modes other than count, +value_field+ must be
@@ -104,6 +107,7 @@ function (angular, app, $, _, kbn, moment, timeSeries, numeral) {
         min: 0
       },
       /** @scratch /panels/histogram/5
+       *
        * ==== Queries
        * queries object:: This object describes the queries to use on this panel.
        * queries.mode::: Of the queries available, which to use. Options: +all, pinned, unpinned, selected+
@@ -114,6 +118,7 @@ function (angular, app, $, _, kbn, moment, timeSeries, numeral) {
         ids         : []
       },
       /** @scratch /panels/histogram/3
+       *
        * ==== Annotations
        * annotate object:: A query can be specified, the results of which will be displayed as markers on
        * the chart. For example, for noting code deploys.
@@ -221,6 +226,7 @@ function (angular, app, $, _, kbn, moment, timeSeries, numeral) {
       /** @scratch /panels/histogram/3
        * derivative:: Show each point on the x-axis as the change from the previous point
        */
+
       derivative    : false,
       /** @scratch /panels/histogram/3
        * tooltip object::
@@ -340,7 +346,7 @@ function (angular, app, $, _, kbn, moment, timeSeries, numeral) {
       _.each(queries, function(q) {
         var query = $scope.ejs.FilteredQuery(
           querySrv.toEjsObj(q),
-          filterSrv.getBoolFilter(filterSrv.ids)
+          filterSrv.getBoolFilter(filterSrv.ids())
         );
 
         var facet = $scope.ejs.DateHistogramFacet(q.id);
@@ -412,7 +418,7 @@ function (angular, app, $, _, kbn, moment, timeSeries, numeral) {
                 interval: _interval,
                 start_date: _range && _range.from,
                 end_date: _range && _range.to,
-                fill_style: $scope.panel.derivative ? 'null' : 'minimal'
+                fill_style: $scope.panel.derivative ? 'null' : $scope.panel.zerofill ? 'minimal' : 'no'
               };
               time_series = new timeSeries.ZeroFilled(tsOpts);
               hits = 0;
@@ -610,7 +616,7 @@ function (angular, app, $, _, kbn, moment, timeSeries, numeral) {
         function render_panel(data) {
           // IE doesn't work without this
           try {
-            elem.css({height:scope.panel.height || scope.row.height});
+            elem.css({height:scope.row.height});
           } catch(e) {return;}
 
           // Populate from the query service
@@ -700,10 +706,9 @@ function (angular, app, $, _, kbn, moment, timeSeries, numeral) {
                   'annotation': {
                     level: 1,
                     icon: {
-                      icon: "icon-tag icon-flip-vertical",
-                      size: 20,
-                      color: "#222",
-                      outline: "#bbb"
+                      width: 20,
+                      height: 21,
+                      icon: "histogram-marker"
                     }
                   }
                 }
@@ -768,8 +773,7 @@ function (angular, app, $, _, kbn, moment, timeSeries, numeral) {
         var $tooltip = $('<div>');
         elem.bind("plothover", function (event, pos, item) {
           var group, value, timestamp, interval;
-          interval = scope.panel.legend ?
-            "" : " per " + (scope.panel.scaleSeconds ? '1s' : scope.panel.interval);
+          interval = " per " + (scope.panel.scaleSeconds ? '1s' : scope.panel.interval);
           if (item) {
             if (item.series.info.alias || scope.panel.tooltip.query_as_alias) {
               group = '<small style="font-size:0.9em;">' +

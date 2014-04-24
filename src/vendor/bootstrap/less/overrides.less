@@ -131,6 +131,19 @@ code, pre {
   border: 1px solid @blue;
 }
 
+.panel-filler {
+  text-align: center;
+  margin:5px;
+  width:100%;
+  background:rgba(100,100,100,0.50);
+  border: 1px solid @blue;
+}
+
+.ui-resizable { position: relative;}
+.ui-resizable-handle { position: absolute;font-size: 0.1px; display: block; }
+.ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle { display: none; }
+.ui-resizable-e { cursor: e-resize; width: 7px; right: 3px; top: 0; height: 100%; }
+.ui-resizable-w { cursor: w-resize; width: 7px; left: 3px; top: 0; height: 100%; }
 // ---------------------------
 
 .row-add-button {
@@ -298,8 +311,6 @@ form input.ng-invalid {
   border-top: 0px;
 }
 
-
-
 .link {
   color: @linkColor;
   cursor: pointer;
@@ -391,7 +402,6 @@ div.flot-text {
   color: @white;
 }
 
-
 .alert-warning {
   background-color: @warningBackground;
   border-color: @warningBorder;
@@ -399,7 +409,6 @@ div.flot-text {
 }
 
 .dropdown-menu,
-.tooltip-inner,
 .nav-pills > li > a
 {
   -webkit-border-radius: 0 !important;

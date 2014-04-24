@@ -1,8 +1,10 @@
 /** @scratch /panels/5
+ *
  * include::panels/bettermap.asciidoc[]
  */
 
 /** @scratch /panels/bettermap/0
+ *
  * == Bettermap
  * Status: *Experimental*
  *
@@ -60,6 +62,7 @@ function (angular, app, _, L, localRequire) {
     // Set and populate defaults
     var _d = {
       /** @scratch /panels/bettermap/3
+       *
        * === Parameters
        *
        * field:: The field that contains the coordinates, in geojson format. GeoJSON is
@@ -80,6 +83,7 @@ function (angular, app, _, L, localRequire) {
        */
       tooltip : "_id",
       /** @scratch /panels/bettermap/5
+       *
        * ==== Queries
        * queries object:: This object describes the queries to use on this panel.
        * queries.mode::: Of the queries available, which to use. Options: +all, pinned, unpinned, selected+
@@ -141,7 +145,7 @@ function (angular, app, _, L, localRequire) {
         var request = $scope.ejs.Request().indices(dashboard.indices[_segment])
           .query($scope.ejs.FilteredQuery(
             boolQuery,
-            filterSrv.getBoolFilter(filterSrv.ids).must($scope.ejs.ExistsFilter($scope.panel.field))
+            filterSrv.getBoolFilter(filterSrv.ids()).must($scope.ejs.ExistsFilter($scope.panel.field))
           ))
           .fields([$scope.panel.field,$scope.panel.tooltip])
           .size($scope.panel.size);
@@ -223,7 +227,7 @@ function (angular, app, _, L, localRequire) {
         var map, layerGroup;
 
         function render_panel() {
-          elem.css({height:scope.panel.height||scope.row.height});
+          elem.css({height:scope.row.height});
 
           scope.require(['./leaflet/plugins'], function () {
             scope.panelMeta.loading = false;
@@ -251,7 +255,7 @@ function (angular, app, _, L, localRequire) {
 
             _.each(scope.data, function(p) {
               if(!_.isUndefined(p.tooltip) && p.tooltip !== '') {
-                markerList.push(L.marker(p.coordinates).bindLabel(p.tooltip));
+                markerList.push(L.marker(p.coordinates).bindLabel(_.isArray(p.tooltip) ? p.tooltip[0] : p.tooltip));
               } else {
                 markerList.push(L.marker(p.coordinates));
               }
